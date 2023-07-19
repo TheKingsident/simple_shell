@@ -1,1 +1,1 @@
-This directory contains files for the "C - Simple Shell" on ALX. It contains a simple shell program
+This repo contains contains a simple shell program
