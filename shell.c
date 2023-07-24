@@ -16,6 +16,11 @@ void handle_command(char *command);
 void execute_command(char *command);
 void parse_command(char *command, char *argv[], int *argc);
 
+/**
+ * run_shell - run the shell
+ *
+ * Return: Nothing.
+ */
 void run_shell(void)
 {
 	char command[MAX_COMMAND_LENGTH];
@@ -46,6 +51,13 @@ void run_shell(void)
 
 }
 
+
+/**
+ * handle_command - Handle the command
+ * @command: THE COMAND
+ *
+ * Return: Nothing
+ */
 void handle_command(char *command)
 {
 	/** Fork a child process to execute the command */
@@ -69,11 +81,18 @@ void handle_command(char *command)
 		waitpid(pid, &status, 0); }
 }
 
+
+/**
+ * execute_command - execute the command
+ * @command: the command
+ *
+ * Return: Nothing.
+ */
 void execute_command(char *command)
 {
 	char *argv[MAX_ARGUMENTS + 2]; /**
 					* +2 to accommodate the command
-					* and the NULL terminator 
+					* and the NULL terminator
 					*/
 	int argc;
 
@@ -99,6 +118,15 @@ void execute_command(char *command)
 		exit(1); }
 }
 
+
+/**
+ * parse_command - tokenize the command
+ * @command: the command
+ * @argv: array of variable arguments
+ * @argc: lenght of argv
+ *
+ *Return: Nothing.
+ */
 void parse_command(char *command, char *argv[], int *argc)
 {
 	/** Tokenize the command string based on whitespaces */

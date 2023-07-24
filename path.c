@@ -6,6 +6,12 @@
 
 #define MAX_PATH_LENGTH 200
 
+/**
+ * find_executable_path - find the path for executable
+ * @command: the command
+ *
+ * Return: NULL or the executable path.
+ */
 char *find_executable_path(char *command)
 {
 	char *path;
