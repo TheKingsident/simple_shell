@@ -95,12 +95,13 @@ void execute_command(char *command)
 					* and the NULL terminator
 					*/
 	int argc;
+	char *executable_path;
 
 	/** Parse the command and its arguments */
 	parse_command(command, argv, &argc);
 
 	/** Find the executable path for the command */
-	char *executable_path = find_executable_path(argv[0]);
+	executable_path = find_executable_path(argv[0]);
 
 	if (executable_path != NULL)
 	{
