@@ -132,6 +132,7 @@ void execute_command(char *command)
 	else
 	{
 		printf("%s: command not found\n", command); /** Command not found in PATH */
+		free(executable_path);
 		exit(1); }
 }
 
