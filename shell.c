@@ -24,13 +24,26 @@ void parse_command(char *command, char *argv[], int *argc);
 void run_shell(void)
 {
 	char command[MAX_COMMAND_LENGTH];
+	FILE *input_stream;
+	int interactive_mode;
+
+	interactive_mode = isatty(fileno(stdin));
+
+
+	if (interactive_mode)
+	{
+		 input_stream = stdin; }
+
+	else
+	{
+		input_stream = freopen(NULL, "r", stdin); }
 
 	while (1)
 	{
 		printf("Simple Shell> ");
 
 		/** Read the command from the input using fgets */
-		if (fgets(command, MAX_COMMAND_LENGTH, stdin) == NULL)
+		if (fgets(command, MAX_COMMAND_LENGTH, input_stream) == NULL)
 		{
 			/** Error or end of input */
 			break; }
@@ -50,6 +63,10 @@ void run_shell(void)
 		{
 			handle_command(command); }
 	}
+
+	if (!interactive_mode)
+	{
+		fclose(input_stream); }
 
 }
 
@@ -107,7 +124,7 @@ void execute_command(char *command)
 		if (access(argv[0], X_OK) == 0)
 		{
 			execve(argv[0], argv, NULL);
-			perror(argv[0]);
+			fprintf(stderr, "%s: execution failed\n", argv[0]);
 
 			exit(1); }
 		else
@@ -123,10 +140,8 @@ void execute_command(char *command)
 	{
 		/** Execute the command with the arguments */
 		execve(executable_path, argv, NULL);
-		perror(command); /**
-				  * Print the error message
-				  * equivalent to the program name
-				  */
+		fprintf(stderr, "%s: command\n", command); 
+
 		free(executable_path);
 		exit(1); }
 	else
