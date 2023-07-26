@@ -42,7 +42,9 @@ void run_shell(void)
 
 		if (is_builtin_command(command))
 		{
-			execute_builtin_command(command); }
+			execute_builtin_command(command);
+			continue;
+		}
 
 		else
 		{

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "builtin.h"
+#include <limits.h>
 
 /**
  * execute_builtin_command - execute the built in commande
@@ -12,14 +13,47 @@
 
 void execute_builtin_command(char *command)
 {
-	if (strcmp(command, "exit") == 0)
-	{
-		printf("Exiting shell\n");
-		exit(0); }
+	char *command_copy;
+	char *command_name;
+	char *argument;
 
-	else if (strcmp(command, "env") == 0)
+	command_copy = strdup(command);
+	command_name = strtok(command_copy, " ");
+	argument = strtok(NULL, " ");
+
+	if (strcmp(command_name, "exit") == 0)
+	{
+		int exit_status;
+
+		exit_status = 0;
+
+		if (argument != NULL)
+		{
+			char *end_ptr;
+			long status;
+
+			status = strtol(argument, &end_ptr, 10);
+
+			if (*end_ptr == '\0' && end_ptr != argument &&
+					status >= INT_MIN && status <= INT_MAX)
+			{
+				exit_status = (int)status; }
+
+			else
+			{
+				printf("Invalid exit status: %s\n", argument);
+				free(command_copy);
+				return; }
+		}
+
+		free(command_copy);
+		exit(exit_status);
+	}
+
+	else if (strcmp(command_name, "env") == 0)
 	{
 		system("env"); }
+	free(command_copy);
 
 }
 
