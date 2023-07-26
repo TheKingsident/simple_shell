@@ -102,6 +102,20 @@ void execute_command(char *command)
 	/** Parse the command and its arguments */
 	parse_command(command, argv, &argc);
 
+	if (strchr(argv[0], '/') != NULL)
+	{
+		if (access(argv[0], X_OK) == 0)
+		{
+			execve(argv[0], argv, NULL);
+			perror(argv[0]);
+
+			exit(1); }
+		else
+		{
+			printf("%s: No such file or directory\n", argv[0]);
+			exit(1); }
+	}
+
 	/** Find the executable path for the command */
 	executable_path = find_executable_path(argv[0]);
 
