@@ -12,16 +12,17 @@
 #define MAX_ARGUMENTS 10
 
 
-void handle_command(char *command);
-void execute_command(char *command);
+void handle_command(char *command, char *program_name); 
+void execute_command(char *command, char *program_name);
 void parse_command(char *command, char *argv[], int *argc);
+char *get_program_name(char *arg);
 
 /**
  * run_shell - run the shell
  *
  * Return: Nothing.
  */
-void run_shell(void)
+void run_shell(char *program_name)
 {
 	char command[MAX_COMMAND_LENGTH];
 	FILE *input_stream;
@@ -38,7 +39,8 @@ void run_shell(void)
 
 	while (1)
 	{
-		printf("Simple Shell> ");
+		if (interactive_mode)
+			printf("Simple Shell> ");
 
 		/** Read the command from the input using fgets */
 		if (fgets(command, MAX_COMMAND_LENGTH, input_stream) == NULL)
@@ -59,7 +61,8 @@ void run_shell(void)
 
 		else
 		{
-			handle_command(command); }
+			handle_command(command, program_name); }
+
 	}
 
 	if (!interactive_mode)
@@ -75,7 +78,7 @@ void run_shell(void)
  *
  * Return: Nothing
  */
-void handle_command(char *command)
+void handle_command(char *command, char *program_name)
 {
 	/** Fork a child process to execute the command */
 	pid_t pid = fork();
@@ -88,7 +91,7 @@ void handle_command(char *command)
 	else if (pid == 0)
 	{
 		/** Child process */
-		execute_command(command);
+		execute_command(command, program_name);
 		exit(0); }
 	else
 	{
@@ -105,7 +108,7 @@ void handle_command(char *command)
  *
  * Return: Nothing.
  */
-void execute_command(char *command)
+void execute_command(char *command, char *program_name)
 {
 	char *argv[MAX_ARGUMENTS + 2]; /**
 					* +2 to accommodate the command
@@ -117,11 +120,13 @@ void execute_command(char *command)
 	/** Parse the command and its arguments */
 	parse_command(command, argv, &argc);
 
-	if (strchr(argv[0], '/') != NULL)
+	program_name = get_program_name(program_name);
+
+	if (strchr(command, '/') != NULL)
 	{
-		if (access(argv[0], X_OK) == 0)
+		if (access(command, X_OK) == 0)
 		{
-			execve(argv[0], argv, NULL);
+			execve(command, argv, NULL);
 			fprintf(stderr, "%s: execution failed\n", argv[0]);
 
 			exit(1); }
@@ -136,17 +141,47 @@ void execute_command(char *command)
 
 	if (executable_path != NULL)
 	{
-		/** Execute the command with the arguments */
-		execve(executable_path, argv, NULL);
-		fprintf(stderr, "%s: command\n", command);
+		if (execve(executable_path, argv, NULL) == -1)
+		{
+			perror(program_name);
+			free(executable_path);
+			exit(1); }
+	}
 
-		free(executable_path);
-		exit(1); }
 	else
 	{
-		printf("%s: command not found\n", command); /** Command not found in PATH */
+		fprintf(stderr, "%s: %s: not found\n", program_name, command);
 		free(executable_path);
 		exit(1); }
+
+		/** Execute the command with the arguments */
+		/* execve(executable_path, argv, NULL);
+		 *fprintf(stderr, "%s: %s: not found\n", program_name, command);
+		 *
+		 *free(executable_path);
+		 *exit(1); }
+	* else
+	*{
+		*fprintf(stderr, "%s: %d: %s: not found\n", program_name, fileno(stderr), command); * Command not found in PATH 
+		//free(executable_path);
+		//exit(1); } */
+}
+
+char *get_program_name(char *arg)
+{
+
+
+	char *program_name;
+	char *last_slash;
+
+	program_name = arg;
+	last_slash = strrchr(arg, '/');
+
+	if (last_slash != NULL)
+	{
+		program_name = last_slash + 1; }
+
+	return (program_name);
 }
 
 

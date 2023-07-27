@@ -22,6 +22,17 @@ char *find_executable_path(char *command)
 	path_copy = strdup(path);
 	dir = strtok(path_copy, ":");
 
+	if (command[0] == '/')
+	{
+		if (access(command, X_OK) == 0)
+		{
+			return (strdup(command)); }
+
+		else
+		{
+			return (NULL); }
+	}
+
 	while (dir != NULL)
 	{
 		char full_path[MAX_PATH_LENGTH];
