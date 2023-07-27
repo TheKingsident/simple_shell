@@ -23,9 +23,7 @@ void execute_builtin_command(char *command)
 
 	if (strcmp(command_name, "exit") == 0)
 	{
-		int exit_status;
-
-		exit_status = 0;
+		int exit_status = 0;
 
 		if (argument != NULL)
 		{
@@ -54,7 +52,6 @@ void execute_builtin_command(char *command)
 	{
 		system("env"); }
 	free(command_copy);
-
 }
 
 /**

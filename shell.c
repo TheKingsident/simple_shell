@@ -1,4 +1,4 @@
-#include <stdio.h>
+ #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
@@ -29,14 +29,12 @@ void run_shell(void)
 
 	interactive_mode = isatty(fileno(stdin));
 
-
 	if (interactive_mode)
-	{
-		 input_stream = stdin; }
-
+		input_stream = stdin;
 	else
 	{
-		input_stream = freopen(NULL, "r", stdin); }
+		input_stream = freopen(NULL, "r", stdin);
+	}
 
 	while (1)
 	{
@@ -140,7 +138,7 @@ void execute_command(char *command)
 	{
 		/** Execute the command with the arguments */
 		execve(executable_path, argv, NULL);
-		fprintf(stderr, "%s: command\n", command); 
+		fprintf(stderr, "%s: command\n", command);
 
 		free(executable_path);
 		exit(1); }
