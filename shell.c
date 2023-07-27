@@ -12,13 +12,14 @@
 #define MAX_ARGUMENTS 10
 
 
-void handle_command(char *command, char *program_name); 
+void handle_command(char *command, char *program_name);
 void execute_command(char *command, char *program_name);
 void parse_command(char *command, char *argv[], int *argc);
 char *get_program_name(char *arg);
 
 /**
  * run_shell - run the shell
+ * @program_name: name of the programe
  *
  * Return: Nothing.
  */
@@ -75,6 +76,7 @@ void run_shell(char *program_name)
 /**
  * handle_command - Handle the command
  * @command: THE COMAND
+ * @program_name: the name of the programe
  *
  * Return: Nothing
  */
@@ -105,6 +107,7 @@ void handle_command(char *command, char *program_name)
 /**
  * execute_command - execute the command
  * @command: the command
+ * @program_name: the name th programme
  *
  * Return: Nothing.
  */
@@ -155,18 +158,27 @@ void execute_command(char *command, char *program_name)
 		exit(1); }
 
 		/** Execute the command with the arguments */
-		/* execve(executable_path, argv, NULL);
+		/**
+		 *execve(executable_path, argv, NULL);
 		 *fprintf(stderr, "%s: %s: not found\n", program_name, command);
 		 *
 		 *free(executable_path);
 		 *exit(1); }
 	* else
 	*{
-		*fprintf(stderr, "%s: %d: %s: not found\n", program_name, fileno(stderr), command); * Command not found in PATH 
+		*fprintf(stderr, "%s: %d: %s: not found\n", program_name,
+fileno(stderr), command); * Command not found in PATH
 		//free(executable_path);
-		//exit(1); } */
+		//exit(1); }
+		*/
 }
 
+/**
+ * get_program_name - read the command from
+ * @arg: argument
+ *
+ * Return: the name of the programe
+ */
 char *get_program_name(char *arg)
 {
 

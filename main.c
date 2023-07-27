@@ -4,10 +4,16 @@
 #include <unistd.h>
 #include <linux/limits.h>
 
-char* get_executable_path(void)
+/**
+ * get_executable_path - get the path of the command executable
+ *
+ * Return: the path of executable of the command.
+ */
+char *get_executable_path(void)
 {
 	ssize_t len;
 	char *path;
+
 	path = malloc(PATH_MAX);
 
 	if (path == NULL)
@@ -40,8 +46,8 @@ char* get_executable_path(void)
 
 int main(void)
 {
-	char* program_name;
-	
+	char *program_name;
+
 	program_name = get_executable_path();
 
 	if (program_name == NULL)
